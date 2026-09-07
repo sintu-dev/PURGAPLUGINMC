@@ -124,7 +124,7 @@ Durante el evento, se generan oleadas de monstruos con equipamiento letal alrede
 
 ---
 
-## 🧨 Creeper Táctico
+## 🧨 Creeper
 
 El Creeper de la Purga cuenta con habilidades especiales de combate:
 
@@ -170,7 +170,7 @@ Para domesticar a JUST, el jugador debe interactuar con él teniendo en su inven
 
 ---
 
-## 🧟 Zombie del Jugador Caído (Espectro Vengador)
+## 🧟 Zombie del Jugador Caído
 
 Cuando un jugador muere a manos de un mob o del entorno:
 
@@ -291,7 +291,7 @@ PurgaPlugin/
     │   │   ├── listeners/
     │   │   │   └── PurgaListener.java    # Listeners de eventos de daño, muerte y domesticación
     │   │   └── mobs/
-    │   │       └── PurgaMobManager.java  # Gestor de oleadas, DANIS, JUST y Creeper táctico
+    │   │       └── PurgaMobManager.java  # Gestor de oleadas, DANIS, JUST y Creeper
     │   └── resources/
     │       ├── plugin.yml                # Metadata y permisos del plugin
     │       └── config.yml                # Archivo de configuración por defecto
