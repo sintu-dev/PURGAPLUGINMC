@@ -1,4 +1,4 @@
-# PurgaPlugin 🩸
+# PurgaPlugin
 
 **PurgaPlugin** es un plugin avanzado para Minecraft (Spigot / Paper / Purpur) pensado para crear eventos de Purga en servidores PvP y PvE. Durante un tiempo determinado, los jugadores se enfrentan en combate libre sin protecciones de zona, mientras aparecen oleadas de mobs asesinos especiales, se activan mecánicas de supervivencia y se transmiten los sucesos en tiempo real mediante Webhooks de Discord.
 
@@ -301,7 +301,8 @@ PurgaPlugin/
 
 ---
 
-## 🛠️ Instalación y Compilación
+## 🛠️ Descarga
+[Descarga el plugin](./PurgaPlugin-1.0.0.jar) 
 
 ### Instalación en el Servidor
 1. Coloca `PurgaPlugin-1.0.0.jar` dentro del directorio `/plugins` de tu servidor.
