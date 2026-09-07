@@ -277,8 +277,6 @@ Todos los comandos cuentan con **Tab Completion** inteligente.
 PurgaPlugin/
 ├── pom.xml                               # Configuración de dependencias y compilación Maven
 ├── README.md                             # Documentación completa
-├── compile.ps1                           # Script PowerShell para compilación rápida
-├── run_tests.ps1                         # Script PowerShell para ejecutar batería de pruebas
 ├── config.yml                            # Configuración principal (>330 líneas comentadas)
 ├── skript/
 │   └── purga.sk                          # Versión alternativa para servidores con Skript 2.6+
@@ -312,20 +310,6 @@ PurgaPlugin/
 3. Configura tu Webhook de Discord y ajusta los parámetros en `/plugins/PurgaPlugin/config.yml`.
 4. Aplica los cambios en cualquier momento con `/purga reload`.
 
-### Compilación desde el Código Fuente
-Requisitos: JDK 17 o superior y Maven.
-
-```bash
-# Compilar con Maven
-mvn clean package
-
-# O compilar en Windows con PowerShell
-.\compile.ps1
-```
-
-El artefacto compilado se generará en `target/PurgaPlugin-1.0.0.jar`.
-
----
 
 ## 📄 Licencia
 
