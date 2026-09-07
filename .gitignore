@@ -1,0 +1,26 @@
+# ==========================================
+# Archivos de compilación y empaquetado
+# ==========================================
+target/
+bin/
+*.class
+*.jar
+*.war
+*.ear
+
+# ==========================================
+# Entornos de desarrollo e IDEs
+# ==========================================
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# ==========================================
+# Archivos del sistema operativo y logs
+# ==========================================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp

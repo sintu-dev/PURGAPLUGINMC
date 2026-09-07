@@ -1,0 +1,332 @@
+# =======================================================
+# CONFIGURACIÓN COMPLETA DE PURGAPLUGIN
+# =======================================================
+
+# Mundos donde la purga estará activa
+mundos-activos:
+  - "world"
+  - "world_nether"
+  - "world_the_end"
+
+# Configuración de Duración del Evento
+# Duración por defecto al ejecutar /purga start sin argumentos.
+# Puedes usar cualquier combinación de tiempo sin límites:
+# Ejemplos: "30s", "10m", "1h", "1h30m", "24h", "3d", "7d", "manual" (o "0")
+duracion-por-defecto: "30m"
+
+# Configuración de Discord Webhook
+discord:
+  activado: true
+  webhook-url: "https://discord.com/api/webhooks/TU_WEBHOOK_AQUI"
+  nombre-bot: "Sistema de Purga"
+  avatar-url: "https://i.imgur.com/8Q5YgZJ.png"
+  mencionar-everyone: true
+
+# =======================================================
+# SISTEMA DE MOBS ASESINOS DE LA PURGA (VANILLA)
+# =======================================================
+mobs-op:
+  # Activa o desactiva la generación de mobs letales durante la purga
+  activado: true
+
+  # Cantidad de mobs generados cerca de cada jugador al iniciar o en cada oleada
+  mobs-por-jugador: 3
+
+  # Límite máximo de mobs hostiles activos simultáneamente por jugador (evita saturación y picos de CPU)
+  max-mobs-vivos-por-jugador: 6
+
+  # Distancia máxima para auto-despawn de mobs hostiles abandonados por jugadores (en bloques)
+  distancia-despawn-mobs: 64
+
+  # Rango de distancia para spawnear alrededor de los jugadores (en bloques)
+  distancia-minima: 8
+  distancia-maxima: 22
+
+  # Si está en true, los mobs restantes de la purga desaparecerán cuando termine el evento
+  eliminar-mobs-al-finalizar: true
+
+  # Tier de armadura de los mobs humanoides: "NETHERITE", "DIAMOND", "IRON", "GOLD"
+  tier-armadura: "NETHERITE"
+
+  # Nombre personalizado que tendrán encima de sus cabezas (%oleada% opcional)
+  nombre-mob: "&4&l☠ ASESINO DE LA PURGA &7(Oleada %oleada%) ☠"
+
+  # Lista de tipos de mobs Vanilla permitidos
+  # Tipos compatibles: ZOMBIE, SKELETON, ZOMBIE_VILLAGER, VINDICATOR, WITHER_SKELETON,
+  # PIGLIN_BRUTE, PILLAGER, WITCH, CREEPER, SPIDER, CAVE_SPIDER, ENDERMAN, DROWNED, HUSK, STRAY, RAVAGER
+  tipos-mobs-permitidos:
+    - "ZOMBIE"
+    - "SKELETON"
+    - "ZOMBIE_VILLAGER"
+    - "VINDICATOR"
+    - "WITHER_SKELETON"
+    - "PIGLIN_BRUTE"
+    - "CREEPER"
+    - "SPIDER"
+    - "CAVE_SPIDER"
+    - "ENDERMAN"
+    - "DROWNED"
+    - "HUSK"
+    - "STRAY"
+    - "RAVAGER"
+    - "WITCH"
+
+  # -------------------------------------------------------
+  # SISTEMA DE DIFICULTAD Y ESCALADO POR OLEADAS
+  # -------------------------------------------------------
+  dificultad:
+    # Si está en true, los mobs tienen características letales por defecto (armadura OP y daño crítico)
+    op-por-defecto: true
+
+    # Si está en true, los golpes de los mobs matan de un solo impacto (1-Hit Kill)
+    un-hit-kill: true
+
+    # Oleadas periódicas automáticas mientras la purga esté activa
+    oleadas-activadas: true
+    intervalo-oleadas-segundos: 180 # Cada 3 minutos
+
+    # Escalado progresivo de dificultad en cada oleada
+    escalado-por-oleadas:
+      activado: true
+      # Vida máxima adicional que se le añade al mob por cada oleada transcurrida (ej: oleada 3 = +20 de vida)
+      vida-extra-por-oleada: 10.0
+      # Aumento de nivel de efectos de poción (Fuerza, Velocidad, Resistencia) cada X oleadas
+      aumento-pociones-cada-x-oleadas: 2
+      # Límite máximo de oleadas para el multiplicador de dificultad
+      maximo-oleadas-escalado: 10
+
+  # -------------------------------------------------------
+  # HABILIDADES ESPECIALES DE MOBS
+  # -------------------------------------------------------
+  habilidades-especiales:
+    creeper:
+      # Si recibe daño, se teletransporta automáticamente a una posición estratégica
+      teletransporte-al-dano: true
+      distancia-teletransporte: 6
+      # Si un jugador está dentro del radio indicado, el Creeper detona de forma instantánea/suicida
+      explosion-instantanea-cerca-jugador: true
+      distancia-explosion: 3.5
+      poder-explosion: 4.0
+      # Si está en true, el Creeper spawnea cargado/electrificado (Charged Creeper)
+      cargado-electrico: true
+
+  # -------------------------------------------------------
+  # SISTEMA DE RECOMPENSAS / DROPS CON PROBABILIDAD
+  # (Sus armas y armaduras chetadas nunca se sueltan)
+  # -------------------------------------------------------
+  recompensas-drops:
+    activado: true
+    # Solo entrega recompensas si el mob fue eliminado por un jugador
+    solo-si-mata-jugador: true
+    # Experiencia soltada al morir
+    experiencia-al-morir: 25
+    # Lista de ítems posibles a soltar con su probabilidad individual (de 0.0 a 100.0%)
+    items:
+      diamante:
+        material: "DIAMOND"
+        probabilidad: 60.0
+        cantidad-min: 1
+        cantidad-max: 3
+        nombre: "&b&l✦ Diamante Purificado"
+        lore:
+          - "&7Recompensa obtenida al derrotar"
+          - "&7a un Asesino de la Purga."
+      manzana_dorada:
+        material: "GOLDEN_APPLE"
+        probabilidad: 35.0
+        cantidad-min: 1
+        cantidad-max: 2
+      fragmento_netherite:
+        material: "NETHERITE_SCRAP"
+        probabilidad: 20.0
+        cantidad-min: 1
+        cantidad-max: 1
+        nombre: "&6&l✦ Fragmento de la Purga"
+      totem:
+        material: "TOTEM_OF_UNDYING"
+        probabilidad: 8.0
+        cantidad-min: 1
+        cantidad-max: 1
+        nombre: "&e&l✦ Tótem de Supervivencia"
+
+# =======================================================
+# MECÁNICA DE TÓTEMS DE INMORTALIDAD (TOTEM OF UNDYING)
+# =======================================================
+totems:
+  # Probabilidad de 0.0% a 100.0% de que el tótem FALLE y NO se active durante la purga
+  probabilidad-fallo: 40.0
+  # Si falla, se consume/rompe el tótem de la mano del jugador
+  consumir-totem-al-fallar: true
+  # Mensaje enviado al jugador cuando su tótem falla
+  mensaje-fallo: "&4&l☠ ¡TU TÓTEM HA FALLADO! &cLa energía de la Purga neutralizó su poder..."
+  # Sonido reproducido al fallar el tótem
+  sonido-fallo: "BLOCK_RESPAWN_ANCHOR_DEPLETE"
+
+# =======================================================
+# SISTEMA DE ZOMBIE DEL JUGADOR CAÍDO (ESPECTRO VENGADOR)
+# =======================================================
+zombie-jugador-muerto:
+  # Activa la generación de un zombie con el nombre y cabeza del jugador cuando muere por un mob
+  activado: true
+
+  # Radio en bloques para detectar compañeros/jugadores cercanos y activar la aparición
+  radio-deteccion: 25.0
+
+  # Nombre personalizado del Zombie generado (%jugador% se reemplaza por el nombre)
+  nombre-zombie: "&4&l☠ %jugador% (Zombificado) ☠"
+
+  # Si está en true, el zombie guarda las cosas/drops del jugador muerto y las suelta al ser eliminado
+  guardar-inventario-en-zombie: true
+
+  # Mensaje enviado cuando el zombie captura las pertenencias del jugador
+  mensaje-zombie-aparece: "&4&l¡El cadáver zombificado de &c%jugador% &4&lha despertado! ¡Mátalo para recuperar sus cosas!"
+
+  # Mensaje cuando un compañero o jugador derrota al zombie y recupera las cosas
+  mensaje-zombie-derrotado: "&a&l¡Has derrotado al cadáver de &e%jugador% &a&ly recuperado sus pertenencias!"
+
+  # -------------------------------------------------------
+  # EFECTOS NEGATIVOS A COMPAÑEROS/JUGADORES CERCANOS
+  # -------------------------------------------------------
+  efectos-a-companeros:
+    activado: true
+    # Radio para aplicar los efectos negativos a los jugadores cercanos
+    radio-efectos: 20.0
+    # Mensaje enviado a los jugadores afectados
+    mensaje-efectos: "&4&l¡Tu compañero &c%jugador% &4&lha caído! &7Una ola de pánico y ceguera nubla tus sentidos..."
+    sonido-efectos: "ENTITY_WARDEN_HEARTBEAT"
+    # Lista de efectos negativos con duración en segundos y nivel
+    lista-efectos:
+      ceguera:
+        tipo: "BLINDNESS"
+        duracion-segundos: 10
+        nivel: 1
+      lentitud:
+        tipo: "SLOW"
+        duracion-segundos: 8
+        nivel: 2
+      oscuridad:
+        tipo: "DARKNESS"
+        duracion-segundos: 10
+        nivel: 1
+      debilidad:
+        tipo: "WEAKNESS"
+        duracion-segundos: 12
+        nivel: 1
+
+# =======================================================
+# MOBS ESPECIALES: EL GATO DANIS Y EL LOBO JUST
+# =======================================================
+mobs-especiales:
+  # -------------------------------------------------------
+  # GATO "DANIS" (Mascota engañosa / Insta-kill al final)
+  # -------------------------------------------------------
+  danis:
+    activado: true
+    spawns-por-oleada: 1
+    nombre: "&d&l✦ DANIS ✦"
+    vida-maxima: 120.0
+    poder-explosion: 5.0
+    # Ignora totalmente el tótem de la inmortalidad al detonar
+    bypass-totem: true
+    # Detona cuando solo queda X mob hostil de la oleada cerca
+    mobs-restantes-para-detonar: 1
+    distancia-detonacion: 2.0
+    mensaje-insta-kill: "&4&l☠ ¡DANIS TE HA TRAICIONADO! &cLa explosión fulminante atravesó tu tótem..."
+
+  # -------------------------------------------------------
+  # LOBO "JUST" (Guardián Protector, Ahuyenta a DANIS y Cura)
+  # -------------------------------------------------------
+  just:
+    activado: true
+    spawns-por-oleada: 1
+    nombre-salvaje: "&b&l🐺 JUST 🐺 &7(Salvaje)"
+    nombre-domesticado: "&b&l🐺 JUST 🐺 &7(&e%dueno%&7)"
+    vida-maxima: 200.0
+    dano-ataque: 12.0
+    # No desaparece al finalizar la purga (permanente tras ser domesticado)
+    persistir-tras-purga: true
+    # Límite estricto de 1 por jugador (no spawnea si ya tiene uno)
+    limite-por-jugador: 1
+
+    # Requisitos de domesticación (2 Netherite + 2 Diamantes)
+    domesticacion:
+      item-1:
+        material: "NETHERITE_INGOT"
+        cantidad: 2
+      item-2:
+        material: "DIAMOND"
+        cantidad: 2
+      mensaje-domesticado: "&a&l¡Has domesticado a JUST! &eAhora te protegerá en combate, ahuyentará al gato DANIS y curará tus heridas."
+      mensaje-falta-items: "&c¡Para domesticar a JUST necesitas 2 Lingotes de Netherite y 2 Diamantes en tu inventario!"
+
+    # Habilidad 1: Ahuyentar a DANIS
+    ahuyentar-danis:
+      activado: true
+      radio-proteccion: 8.0 # DANIS no puede detonar y huye dentro de este radio
+
+    # Habilidad 2: Regeneración de Vida al Dueño (Solo activo durante la Purga)
+    curacion-al-dueno:
+      activado: true
+      intervalo-segundos: 6
+      radio-maximo: 12.0
+      nivel-regeneracion: 2
+      duracion-segundos: 5
+
+# =======================================================
+# REGLAS ADICIONALES DE COMBATE Y SUPERVIVENCIA
+# =======================================================
+opciones-adicionales:
+  # Efecto de rayo visual cuando un jugador muere durante la purga
+  rayo-al-morir: true
+
+  # Bloqueo de comandos para evitar que los jugadores escapen del PvP
+  bloquear-comandos-durante-purga:
+    - "spawn"
+    - "tpa"
+    - "tpaccept"
+    - "tpahere"
+    - "home"
+    - "sethome"
+    - "warp"
+    - "back"
+    - "rtp"
+    - "wild"
+  mensaje-comando-bloqueado: "&c¡No puedes huir con comandos durante la Purga!"
+
+# Protección de Animales durante la Purga (Prohibido dañarlos)
+proteger-animales: true
+
+# Configuración de Efectos Visuales y Sonidos
+efectos:
+  sonido-inicio: "ENTITY_WITHER_SPAWN"
+  sonido-fin: "UI_TOAST_CHALLENGE_COMPLETE"
+  sonido-muerte: "ENTITY_LIGHTNING_BOLT_THUNDER"
+  bossbar:
+    activado: true
+    texto: "&4&l¡LA PURGA ESTÁ ACTIVA! &7| &cTiempo: &e%tiempo%"
+    color: "RED" # RED, BLUE, GREEN, PINK, PURPLE, WHITE, YELLOW
+    estilo: "SOLID"
+
+# Mensajes en el juego
+mensajes:
+  prefijo: "&8[&4&lPURGA&8] &r"
+  sin-permiso: "&cNo tienes permisos para usar este comando."
+  purga-ya-activa: "&c¡La purga ya está en curso!"
+  purga-no-activa: "&cLa purga no está activa en este momento."
+  animal-protegido: "&c¡Durante la Purga está prohibido atacar a los animales!"
+  inicio-broadcast:
+    - "&4&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    - "       &4&l¡LA PURGA HA COMENZADO!"
+    - " &cEl PvP global ha sido activado en todos los mundos."
+    - " &7Las protecciones han quedado desactivadas temporalmente."
+    - " &4☠ ¡CUIDADO! Mobs asesinos acechan la zona..."
+    - " &eNota: Los animales están completamente protegidos."
+    - "&4&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  fin-broadcast:
+    - "&a&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    - "       &a&lLA PURGA HA FINALIZADO"
+    - " &7Las protecciones vuelven a estar activas."
+    - " &aLa paz y el orden han sido restaurados."
+    - "&a&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  muerte-broadcast: "&4[Purga] &c%victima% &7fue asesinado por &c%asesino% &7usando &e%arma%&7."
+  config-recargada: "&aConfiguración recargada correctamente."

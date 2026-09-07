@@ -1,0 +1,176 @@
+# ========================================================
+# ARCHIVO: plugins/Skript/scripts/purga.sk
+# REQUISITOS: Skript 2.6+
+# ========================================================
+
+options:
+    # URL de tu webhook de Discord
+    webhook_url: "https://discord.com/api/webhooks/TU_WEBHOOK_AQUI"
+    bot_name: "Sistema de Purga"
+    avatar_url: "https://i.imgur.com/8Q5YgZJ.png"
+    duracion_default_minutos: 30
+
+# ========================================================
+# FUNCIONES DE DISCORD (WEBHOOK)
+# ========================================================
+
+function sendDiscordEmbed(title: text, desc: text, color: integer, fieldName: text, fieldValue: text):
+    if "{@webhook_url}" contains "TU_WEBHOOK_AQUI" or "{@webhook_url}" is "":
+        stop
+    set {_body} to "{""username"": ""{@bot_name}"", ""avatar_url"": ""{@avatar_url}"", ""embeds"": [{""title"": ""%{_title}%"", ""description"": ""%{_desc}%"", ""color"": %{_color}%, ""fields"": [{""name"": ""%{_fieldName}%"", ""value"": ""%{_fieldValue}%""}], ""footer"": {""text"": ""Purga System • Minecraft""}}]}"
+    send a "POST" request to "{@webhook_url}" with headers "Content-Type: application/json; charset=UTF-8" and body {_body}
+
+# ========================================================
+# COMANDOS DE ADMINISTRADOR
+# ========================================================
+
+command /purga [<text>] [<text>]:
+    permission: purga.admin
+    permission message: &cNo tienes permisos para administrar la Purga.
+    trigger:
+        if arg-1 is "on" or "start":
+            if {purga.estado} is true:
+                send "&c¡La Purga ya está activa!" to player
+                stop
+            set {purga.estado} to true
+            set {purga.muertes} to 0
+            
+            # Mensajes y Sonidos Globales
+            broadcast "&4&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            broadcast "       &4&l¡LA PURGA HA COMENZADO!"
+            broadcast " &cEl PvP global ha sido activado en todos los mundos."
+            broadcast " &7Las protecciones han quedado desactivadas temporalmente."
+            broadcast "&4&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            
+            play sound "entity.wither.spawn" with volume 1 and pitch 0.5 to all players
+            send title "&4&l¡LA PURGA!" with subtitle "&cEl PvP general está activo" to all players for 5 seconds
+            
+            # Procesar formato de tiempo
+            set {_tiempo_raw} to "{@duracion_default_minutos} minutes"
+            if arg-2 is set:
+                set {_t} to arg-2
+                if {_t} ends with "s":
+                    replace all "s" with " seconds" in {_t}
+                else if {_t} ends with "m":
+                    replace all "m" with " minutes" in {_t}
+                else if {_t} ends with "h":
+                    replace all "h" with " hours" in {_t}
+                else if {_t} ends with "d":
+                    replace all "d" with " days" in {_t}
+                else if {_t} is "manual" or "0":
+                    set {_t} to "0 seconds"
+                else:
+                    set {_t} to "%{_t}% minutes"
+                set {_tiempo_raw} to {_t}
+            
+            set {_span} to {_tiempo_raw} parsed as timespan
+            set {_duracion_txt} to "%{_tiempo_raw}%"
+            if {_tiempo_raw} is "0 seconds":
+                set {_duracion_txt} to "Indefinida (Manual)"
+
+            sendDiscordEmbed("🚨 ¡LA PURGA HA COMENZADO! 🚨", "El PvP general ha sido activado en todo el servidor. Las protecciones no te salvarán. ¡Lucha por tu vida!", 15158332, "Iniciado por / Duración", "👤 **Iniciado por:** %player%%nl%⏱️ **Duración:** %{_duracion_txt}%")
+
+            # Temporizador automático
+            if {_span} is set:
+                if {_tiempo_raw} is not "0 seconds":
+                    wait {_span}
+                    if {purga.estado} is true:
+                        execute console command "purga off"
+
+        else if arg-1 is "off" or "stop":
+            if {purga.estado} is not true:
+                send "&cLa Purga no está activa." to player
+                stop
+            set {purga.estado} to false
+            
+            broadcast "&a&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            broadcast "       &a&lLA PURGA HA FINALIZADO"
+            broadcast " &7Las protecciones vuelven a estar activas."
+            broadcast " &aLa paz y el orden han sido restaurados."
+            broadcast "&a&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            
+            play sound "ui.toast.challenge_complete" with volume 1 and pitch 1 to all players
+            send title "&a&lPURGA FINALIZADA" with subtitle "&7El orden ha sido restaurado" to all players for 5 seconds
+            
+            # Enviar a Discord
+            sendDiscordEmbed("🛡️ LA PURGA HA TERMINADO 🛡️", "La purga ha llegado a su fin. Las zonas protegidas vuelven a ser seguras.", 3066993, "Estadísticas de la Purga", "👤 **Finalizado por:** %player%%nl%☠️ **Bajas totales cobradas:** %{purga.muertes}%")
+
+        else if arg-1 is "status":
+            send "&8&m━━━━━━━━━━&r &4&lESTADO DE LA PURGA &8&m━━━━━━━━━━" to player
+            if {purga.estado} is true:
+                send "&7Estado: &a&lACTIVA" to player
+                send "&7Bajas cobradas: &c%{purga.muertes}%" to player
+            else:
+                send "&7Estado: &c&lINACTIVA" to player
+        else:
+            send "&8&m━━━━━━━━━━&r &4&lCOMANDOS DE PURGA &8&m━━━━━━━━━━" to player
+            send "&c/purga start [minutos] &7- Iniciar evento de purga." to player
+            send "&c/purga stop &7- Detener evento de purga." to player
+            send "&c/purga status &7- Ver estadísticas de la purga." to player
+
+# ========================================================
+# CONTROL DE DAÑO, BYPASS DE PVP Y PROTECCIÓN DE ANIMALES
+# ========================================================
+
+# 1. Prohibir daño a los animales durante la purga
+on damage of animals:
+    if {purga.estado} is true:
+        set {_mundo} to "%victim's world%"
+        if {_mundo} is "world" or "world_nether" or "world_the_end":
+            if attacker is a player:
+                cancel event
+                send "&c¡Durante la Purga está prohibido atacar a los animales!" to attacker
+            else if attacker is a projectile:
+                set {_shooter} to attacker's shooter
+                if {_shooter} is a player:
+                    cancel event
+                    send "&c¡Durante la Purga está prohibido atacar a los animales!" to {_shooter}
+
+# 2. Forzar PvP entre jugadores en zonas de protección y 1-Hit Kill de Mobs OP
+on damage of player:
+    if {purga.estado} is true:
+        if metadata value "purga_mob" of attacker is true:
+            set damage to 1000
+            stop
+        set {_mundo} to "%victim's world%"
+        if {_mundo} is "world" or "world_nether" or "world_the_end":
+            if attacker is a player:
+                if event is cancelled:
+                    uncancel event
+            else if attacker is a projectile:
+                set {_shooter} to attacker's shooter
+                if {_shooter} is a player:
+                    if event is cancelled:
+                        uncancel event
+
+# 3. Evitar que los mobs OP de la Purga suelten sus ítems al morir
+on death of living entity:
+    if metadata value "purga_mob" of victim is true:
+        clear drops
+        set dropped xp to 0
+
+# ========================================================
+# REGISTRO DE MUERTES Y DISCORD NOTIFICATION
+# ========================================================
+
+on death of player:
+    if {purga.estado} is true:
+        strike lightning effect at victim's location
+        if attacker is a player:
+            add 1 to {purga.muertes}
+            set {_arma} to "%name of attacker's tool%"
+            if {_arma} is "<none>":
+                set {_arma} to "%type of attacker's tool%"
+            if {_arma} is "air" or "<none>":
+                set {_arma} to "manos desnudas"
+            
+            # Anuncio en el juego
+            broadcast "&4[Purga] &c%victim% &7fue ejecutado por &c%attacker% &7usando &e%{_arma}%&7."
+            
+            # Discord Webhook
+            set {_x} to round(x-coord of victim)
+            set {_y} to round(y-coord of victim)
+            set {_z} to round(z-coord of victim)
+            set {_mundo} to "%victim's world%"
+            
+            sendDiscordEmbed("⚔️ ¡SE HA COBRADO UNA VIDA EN LA PURGA!", "**%attacker%** ha ejecutado a **%victim%**.", 10038562, "Detalles del Enfrentamiento", "🗡️ **Arma:** %{_arma}%%nl%🌍 **Mundo:** %{_mundo}%%nl%📍 **Coordenadas:** X: %{_x}% Y: %{_y}% Z: %{_z}%")

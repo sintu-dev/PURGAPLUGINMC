@@ -1,0 +1,17 @@
+name: PurgaPlugin
+version: 1.0.0
+main: com.tuserver.purgaplugin.PurgaPlugin
+api-version: 1.16
+authors: [TuServidor]
+description: Plugin de evento de Purga con PvP forzado y Webhooks de Discord.
+
+commands:
+  purga:
+    description: Comando principal de administración de la Purga.
+    permission: purga.admin
+    usage: /purga <start [minutos]|stop|status|reload>
+
+permissions:
+  purga.admin:
+    description: Permiso para iniciar, detener y recargar la purga.
+    default: op
