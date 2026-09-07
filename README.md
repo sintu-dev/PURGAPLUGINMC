@@ -24,6 +24,7 @@ El plugin está pensado para ser 100% configurable, ligero y adaptable al estilo
 14. [Comandos y Permisos](#-comandos-y-permisos)
 15. [Compatibilidad](#-compatibilidad)
 16. [Estructura del Proyecto](#-estructura-del-proyecto)
+17. [Descarga](#D-descarga)
 
 ---
 
