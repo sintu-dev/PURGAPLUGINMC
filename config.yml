@@ -1,5 +1,6 @@
 # ===============
 # CONFIGURACIÓN
+# BY SINTU
 # ===============
 
 # Mundos donde la purga estará activa
@@ -163,7 +164,7 @@ totems:
   sonido-fallo: "BLOCK_RESPAWN_ANCHOR_DEPLETE"
 
 # =======================================================
-# SISTEMA DE ZOMBIE DEL JUGADOR CAÍDO (ESPECTRO VENGADOR)
+# SISTEMA DE ZOMBIE DEL JUGADOR CAÍDO
 # =======================================================
 zombie-jugador-muerto:
   # Activa la generación de un zombie con el nombre y cabeza del jugador cuando muere por un mob
